@@ -1,0 +1,48 @@
+# geo4d — 4D (spatio-temporal) geodesy in pure f64, built on geo3d.
+#
+# The fourth dimension is time. geo4d adds a high-precision atomic `Epoch`/`Duration`, timestamped
+# coordinates and state vectors, trajectories with interpolation, time-dependent datum shifts
+# (14-parameter Helmert and tectonic plate motion / ITRF), 4D closest approach, conflict windows and
+# intercept solving, and time-boxed volumes for 4D geofencing. The 3D geometry it stands on —
+# ellipsoids, ECEF/ENU frames, geodesics, static volumes — is re-used from `geo3d`, not re-implemented,
+# and re-exported here so a program needs only one dependency.
+#
+# Package metadata is pinned here rather than inherited from a workspace so the crate publishes
+# unchanged from its own repository.
+[package]
+name = "geo4d"
+version = "0.1.0"
+edition = "2021"
+# No numerical dependencies beyond geo3d; the floor the code itself needs, verified by the CI `msrv` job.
+rust-version = "1.85"
+license = "Apache-2.0"
+description = "4D (spatio-temporal) geodesy in pure f64: high-precision TAI/GPS/UTC/TT epochs, timestamped coordinates, trajectories with interpolation, time-dependent Helmert & tectonic-plate/ITRF datum propagation, 4D closest approach, conflict windows, intercept, and time-boxed volumes. Built on geo3d."
+repository = "https://github.com/FusionVault/geo4d"
+readme = "README.md"
+documentation = "https://docs.rs/geo4d"
+keywords = ["geodesy", "spatiotemporal", "trajectory", "itrf", "aerospace"]
+categories = ["science::geo", "aerospace", "date-and-time", "mathematics"]
+# Repo tooling that has no place in the published crate.
+exclude = [".github/", ".gitignore", "rustfmt.toml"]
+
+[dependencies]
+# The 3D geometry geo4d builds on: ellipsoids, ECEF/ENU frames, geodesics, static volumes, Helmert7.
+geo3d = "0.2"
+# Optional: `Serialize`/`Deserialize` on every public type (feature `serde`). Forwarded to geo3d so
+# the re-exported 3D types serialize too.
+serde = { version = "1", features = ["derive"], optional = true }
+
+[features]
+serde = ["dep:serde", "geo3d/serde"]
+
+[dev-dependencies]
+serde_json = "1"
+
+# Clippy's default set, warned here and denied in CI (`-D warnings`). A lint that is wrong for one
+# site is allowed at that site with a reason.
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+
+# Keeps file:line in panics and backtraces without the heavy DWARF that a step-debugger would use.
+[profile.dev]
+debug = "line-tables-only"
