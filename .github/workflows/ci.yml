@@ -49,4 +49,7 @@ jobs:
         with:
           toolchain: ${{ steps.msrv.outputs.version }}
       - uses: Swatinem/rust-cache@v2
-      - run: cargo check --all-targets --all-features
+      # The core (+ serde) must build on the declared MSRV. The forwarded interop bridges
+      # (mint/glam/nalgebra/geo-types) track their own, newer, upstream MSRVs, so they are not part
+      # of this check; the stable `rust` job builds them with `--all-features`.
+      - run: cargo check --all-targets --features serde

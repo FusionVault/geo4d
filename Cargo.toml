@@ -11,7 +11,7 @@
 # unchanged from its own repository.
 [package]
 name = "geo4d"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 # No numerical dependencies beyond geo3d; the floor the code itself needs, verified by the CI `msrv` job.
 rust-version = "1.85"
@@ -27,13 +27,20 @@ exclude = [".github/", ".gitignore", "rustfmt.toml"]
 
 [dependencies]
 # The 3D geometry geo4d builds on: ellipsoids, ECEF/ENU frames, geodesics, static volumes, Helmert7.
-geo3d = "0.2"
+# 0.2.2 is the floor that carries the optional interop bridges forwarded below.
+geo3d = "0.2.2"
 # Optional: `Serialize`/`Deserialize` on every public type (feature `serde`). Forwarded to geo3d so
 # the re-exported 3D types serialize too.
 serde = { version = "1", features = ["derive"], optional = true }
 
 [features]
 serde = ["dep:serde", "geo3d/serde"]
+# Interop bridges, forwarded to geo3d, so `geo4d --features glam` (etc.) makes the re-exported
+# coordinate types convert to/from the common math and GIS crates. No extra direct dependency here.
+mint = ["geo3d/mint"]
+glam = ["geo3d/glam"]
+nalgebra = ["geo3d/nalgebra"]
+geo-types = ["geo3d/geo-types"]
 
 [dev-dependencies]
 serde_json = "1"

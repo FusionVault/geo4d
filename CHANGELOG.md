@@ -2,6 +2,12 @@
 
 All notable changes to `geo4d`. Plain semver; tags `vX.Y.Z` at the published commit.
 
+## 0.1.1 — 2026-09-14
+
+Additive. Requires `geo3d` ≥ 0.2.2 (so it picks up geo3d's FMA performance pass automatically).
+
+- Forward geo3d's interop bridges as features `mint`, `glam`, `nalgebra`, `geo-types`, so the re-exported coordinate types convert to/from the common math and GIS crates via `geo4d --features <name>`. All default-off.
+
 ## 0.1.0 — 2026-09-14
 
 Initial release. 4D (spatio-temporal) geodesy on top of `geo3d`.

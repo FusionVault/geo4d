@@ -271,6 +271,17 @@ and the re-exported `geo3d` coordinate types — serialises to plain fields.
 let json = serde_json::to_string(&geo4d::Epoch::from_unix_seconds(1_700_000_000.0))?;
 ```
 
+### Interoperability
+
+The re-exported coordinate types (`Ecef`, `Vec3`, `Enu`, …) bridge to the common math and GIS crates
+through `geo3d`'s optional conversions, forwarded here as features: `mint`, `glam`, `nalgebra` and
+`geo-types`. All default-off, so the default build pulls nothing extra.
+
+```bash
+cargo add geo4d --features glam
+# then: let v: glam::DVec3 = ecef4.position.into();
+```
+
 ## Precision and accuracy classes
 
 Each function states its accuracy class, and the tests hold it:
